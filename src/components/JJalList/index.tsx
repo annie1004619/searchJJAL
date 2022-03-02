@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import JJalItem from '../JJalItem';
 import styled from 'styled-components';
 import Pagination from '../Pagination';
+import media from '../../lib/styles/media';
+import { JjalType } from '../../api/jjal';
+
+type JJalListProps = {
+  data: Array<JjalType> | Array<unknown>;
+};
 
 export type JJalItemType = {
   imageUrl: string;
@@ -9,7 +15,7 @@ export type JJalItemType = {
   title: string;
 };
 
-function JJalList({ data }: any) {
+function JJalList({ data }: JJalListProps) {
   const [page, setPage] = useState(1);
   const limit = 18;
   const offset = (page - 1) * limit;
@@ -26,8 +32,8 @@ function JJalList({ data }: any) {
         )}
         <ListWrapper>
           {data
-            .slice(offset, offset + limit)
-            .map(({ imageUrl, _id, title }: JJalItemType) => (
+            ?.slice(offset, offset + limit)
+            .map(({ imageUrl, _id, title }: any) => (
               <JJalItem key={_id} imageUrl={imageUrl} title={title} />
             ))}
         </ListWrapper>
@@ -67,5 +73,11 @@ const ListWrapper = styled.div`
   grid-template-columns: repeat(3, 1fr);
   row-gap: 30px;
   justify-items: center;
+  @media (max-width: ${media.laptopM}px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: ${media.tablet}px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 export default JJalList;

@@ -1,16 +1,9 @@
 import React from 'react';
 
 type ErrorProps = {
-  error: {
-    message: string;
-    name: string;
-    stack: string;
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    config: Object;
-    status: number;
-  };
+  error: Error;
 };
-function Error({ error }: any) {
+function Error({ error }: ErrorProps) {
   return (
     <div>
       <div>문제가 발생했습니다. </div>

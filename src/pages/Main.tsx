@@ -8,34 +8,33 @@ import KeyWordBar from '../components/KeyWordBar';
 import SearchBar from '../components/SearchBar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Error from '../components/Error';
+import ScrollButton from '../components/atoms/ScrollButton';
 
 import { RootState } from '../modules';
-import { setInit } from '../modules/jjal/action';
+import { setInit } from '../modules/jjal/actions';
 import { getJjalThunk } from '../modules/jjal/thunk';
 
 import useDebounce from '../hooks/useDebounce';
+import media from '../lib/styles/media';
+import useInput from '../hooks/useInput';
 
 function Main() {
+  const [text, onChangeText, setText] = useInput('');
+  const [previousText, setPreviousText] = useState('');
+  const debounceValue = useDebounce<string>(text, 500);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data, loading, error } = useSelector(
     (state: RootState) => state.jjalReducer.jjals,
   );
 
-  const [text, setText] = useState('');
-  const [previousText, setPreviousText] = useState('');
-  const onChangeText = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-  }, []);
-
-  const debounceValue = useDebounce<string>(text, 500);
-
   const cancelAllText = () => {
     setText('');
   };
 
   const onSubmitText = () => {
-    if (text.length === 0) {
+    if (text.length === 0 || text === ' ') {
       alert('검색어를 입력해주세요');
       return;
     }
@@ -50,9 +49,13 @@ function Main() {
   };
 
   useEffect(() => {
-    console.log(debounceValue === previousText);
+    if (debounceValue === ' ') {
+      alert('검색어를 입력해주세요');
+      setText('');
+      return;
+    }
     if (debounceValue.length !== 0) {
-      dispatch(getJjalThunk(text));
+      dispatch(getJjalThunk(debounceValue));
       setPreviousText(debounceValue);
     }
   }, [debounceValue]);
@@ -84,6 +87,7 @@ function Main() {
         {error && <Error error={error} />}
         {data && <JJalList data={data} />}
       </DataWrapper>
+      <ScrollButton />
     </Container>
   );
 }
@@ -91,6 +95,7 @@ function Main() {
 const Container = styled.div`
   width: 50%;
   margin: 3vh auto 0;
+  min-width: ${media.tablet};
 `;
 const Line = styled.div`
   margin: 2vh 0;

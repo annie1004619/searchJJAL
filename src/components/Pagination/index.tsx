@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import Button from '../atoms/Button';
-import useScrollTop from '../../hooks/useScrollTop';
 
 type PaginationProps = {
   page: number;
@@ -17,37 +16,60 @@ type StyleButtonProps = {
 
 function Pagination({ page, limit, dataLength, handlePages }: PaginationProps) {
   const totalPages = Math.ceil(dataLength / limit);
-  const setScrollTop = useScrollTop(true);
 
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(totalPages); i++) {
+    pageNumbers.push(i);
+  }
   const onClickPage = (i: number) => {
-    setScrollTop(true);
-    handlePages(i + 1);
+    handlePages(i);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // 총 페이지를 10씩 묶어서 보여준다.
+  const [pageGroup, setPageGroup] = useState(1);
+  const pageGrouplimit = 10;
+  const [pageGroupOffset, setPageGroupOffset] = useState(0);
+
+  useEffect(() => {
+    setPageGroupOffset((pageGroup - 1) * pageGrouplimit);
+    handlePages((pageGroup - 1) * pageGrouplimit + 1);
+  }, [pageGroup]);
+
+  const onClickNextPageGroup = () => {
+    setPageGroup(pageGroup + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const onClickPreviousPageGroup = () => {
+    setPageGroup(pageGroup - 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   return (
     <Container>
       <li>
         <Button
           iconStyle
-          onClick={() => handlePages(page - 1)}
-          disabled={page === 1}
+          onClick={onClickPreviousPageGroup}
+          disabled={pageGroup === 1}
         >
           &lt;
         </Button>
       </li>
-      {Array(totalPages)
-        .fill(1)
-        .map((_, i) => (
-          <StyledLi key={i} currentPage={page === i + 1}>
-            <Button iconStyle onClick={() => onClickPage(i + 1)}>
-              {i + 1}
+      {pageNumbers
+        .slice(pageGroupOffset, pageGroupOffset + pageGrouplimit)
+        .map((i) => (
+          <StyledLi key={i} currentPage={page === i}>
+            <Button iconStyle onClick={() => onClickPage(i)}>
+              {i}
             </Button>
           </StyledLi>
         ))}
       <li>
         <Button
           iconStyle
-          onClick={() => handlePages(page + 1)}
-          disabled={page === totalPages}
+          onClick={onClickNextPageGroup}
+          disabled={pageGroup == Math.ceil(totalPages / pageGrouplimit)}
         >
           &gt;
         </Button>

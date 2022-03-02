@@ -1,6 +1,11 @@
 import { JjalState } from './types';
 import { AnyAction } from 'redux';
-import { GET_JJAL, GET_JJAL_ERROR, GET_JJAL_SUCCESS, SET_INIT } from './action';
+import {
+  GET_JJAL,
+  GET_JJAL_ERROR,
+  GET_JJAL_SUCCESS,
+  SET_INIT,
+} from './actions';
 
 //초기 상태 선언
 const initialState: JjalState = {

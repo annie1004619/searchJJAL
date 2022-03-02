@@ -1,11 +1,11 @@
 import { ThunkAction } from 'redux-thunk';
-import { AnyAction } from 'redux';
 import { RootState } from '..';
 import { getJjal } from '../../api/jjal';
-import { GET_JJAL, GET_JJAL_ERROR, GET_JJAL_SUCCESS } from './action';
+import { JjalAction } from './types';
+import { GET_JJAL, GET_JJAL_ERROR, GET_JJAL_SUCCESS } from './actions';
 
 export const getJjalThunk =
-  (text: string): ThunkAction<void, RootState, null, AnyAction> =>
+  (text: string): ThunkAction<void, RootState, null, JjalAction> =>
   async (dispatch) => {
     dispatch({ type: GET_JJAL }); // 요청 시작
     try {

@@ -8,6 +8,7 @@ import { createStore, applyMiddleware } from 'redux';
 import Thunk from 'redux-thunk';
 import rootReducer from './modules';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import ScrollButton from './components/atoms/ScrollButton';
 
 const store = createStore(
   rootReducer,

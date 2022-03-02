@@ -1,5 +1,5 @@
+import PLACE_HOLDER from '../components/LazyImage/img/placeholder.jpg';
 import { useEffect, useState, useRef } from 'react';
-import PLACE_HOLDER from '../components/Img/img/placeholder.jpg';
 
 export function useLazyImageObserver(src: string) {
   const [imageSrc, setImageSrc] = useState(PLACE_HOLDER);
@@ -8,7 +8,7 @@ export function useLazyImageObserver(src: string) {
   useEffect(() => {
     let observer: IntersectionObserver;
 
-    if (imageRef?.current && !imageSrc) {
+    if (imageRef?.current) {
       observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
@@ -25,5 +25,5 @@ export function useLazyImageObserver(src: string) {
     };
   }, [imageRef, imageSrc, src]);
 
-  return [imageSrc, imageRef];
+  return [imageSrc, imageRef] as [string, typeof imageRef];
 }

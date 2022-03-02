@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../modules';
 import JJalList from '../components/JJalList';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ScrollButton from '../components/atoms/ScrollButton';
 
 function KeyWord() {
   const params = useParams();
@@ -29,6 +30,7 @@ function KeyWord() {
         {error && <div>error</div>}
         {data && <JJalList data={data} />}
       </DataWrapper>
+      <ScrollButton />
     </Container>
   );
 }
